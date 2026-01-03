@@ -12,14 +12,19 @@ function videoCategories() {
     .then((data) => displayVideos(data.videos));
 }
 
-// load categories music
+// load categories 
 const loadCategoriesVideos = (id) => {
     const url = `https://openapi.programming-hero.com/api/phero-tube/category/${id}`
     console.log(url);
     fetch(url)
     .then(response => response.json())
-    .then(data => displayVideos(data.category)
-    )
+    .then(data => {
+        const clickedBtn = document.getElementById(`${id}}`)
+        // clickedBtn.classList.add("active");
+        console.log(clickedBtn);
+        
+        displayVideos(data.category)
+    })
 }
 //display categories
 function displayCategories(categories) {
@@ -31,7 +36,7 @@ function displayCategories(categories) {
     // create Element
     const categoriesDiv = document.createElement("div");
     categoriesDiv.innerHTML = `
-         <button onclick = "loadCategoriesVideos(${cate.category_id})" class="btn btn-sm hover:bg-[#FF1F3D] hover:text-white">${cate.category}</button>
+         <button id="btn-${cate.category_id}" onclick = "loadCategoriesVideos(${cate.category_id})" class="btn btn-sm hover:bg-[#FF1F3D] hover:text-white">${cate.category}</button>
         `;
     // AppendChild
     categoriesContainer.append(categoriesDiv);
@@ -42,6 +47,13 @@ function displayCategories(categories) {
 const displayVideos = (videos) => {
   const videoContainer = document.getElementById("video-container");
   videoContainer.innerHTML = '';
+  if(videos.length === 0){
+     videoContainer.innerHTML = ` <div class="flex col-span-full flex-col items-center py-20 gap-5">
+                <img class="w-30" src="./logo/Icon.png" alt="">
+                <h1 class="text-2xl text-center w-[300px] font-bold">Oops!! Sorry, There is no content here</h1>
+            </div>`
+            return;
+  }
   videos.map((video) => {
     // console.log(video);
 
