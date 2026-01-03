@@ -12,20 +12,49 @@ function videoCategories() {
     .then((data) => displayVideos(data.videos));
 }
 
-// load categories 
-const loadCategoriesVideos = (id) => {
-    const url = `https://openapi.programming-hero.com/api/phero-tube/category/${id}`
-    console.log(url);
-    fetch(url)
-    .then(response => response.json())
-    .then(data => {
-        const clickedBtn = document.getElementById(`${id}}`)
-        // clickedBtn.classList.add("active");
-        console.log(clickedBtn);
-        
-        displayVideos(data.category)
-    })
+// load categories
+function loadCategoriesVideos(id) {
+  const url = `https://openapi.programming-hero.com/api/phero-tube/category/${id}`;
+  console.log(url);
+  fetch(url)
+    .then((response) => response.json())
+    .then((data) => {
+      const clickedBtn = document.getElementById(`${id}}`);
+      // clickedBtn.classList.add("active");
+      console.log(clickedBtn);
+
+      displayVideos(data.category);
+    });
 }
+// videoID
+function videoDetails(vid) {
+  // console.log(vid);
+  const url = `https://openapi.programming-hero.com/api/phero-tube/video/${vid}`;
+  fetch(url)
+    .then((response) => response.json())
+    .then((data) => displayVid(data.video));
+}
+// Display videoid
+const displayVid = (video) => {
+  console.log(video);
+  document.getElementById("my_modal_1").showModal();
+  const modal = document.getElementById("modalDetails");
+  modal.innerHTML = `
+  <div class="card bg-base-100 image-full shadow-sm">
+  <figure>
+    <img
+      src="${video.thumbnail}"
+      alt="Shoes" />
+  </figure>
+  <div class="card-body">
+    <h2 class="card-title">${video.title}</h2>
+    <p>A card component has a figure, a body part, and inside body there are title and actions parts</p>
+    <div class="card-actions justify-end">
+    </div>
+  </div>
+</div>
+  `;
+};
 //display categories
 function displayCategories(categories) {
   // get the container
@@ -46,13 +75,13 @@ function displayCategories(categories) {
 // display videos
 const displayVideos = (videos) => {
   const videoContainer = document.getElementById("video-container");
-  videoContainer.innerHTML = '';
-  if(videos.length === 0){
-     videoContainer.innerHTML = ` <div class="flex col-span-full flex-col items-center py-20 gap-5">
+  videoContainer.innerHTML = "";
+  if (videos.length === 0) {
+    videoContainer.innerHTML = ` <div class="flex col-span-full flex-col items-center py-20 gap-5">
                 <img class="w-30" src="./logo/Icon.png" alt="">
                 <h1 class="text-2xl text-center w-[300px] font-bold">Oops!! Sorry, There is no content here</h1>
-            </div>`
-            return;
+            </div>`;
+    return;
   }
   videos.map((video) => {
     // console.log(video);
@@ -80,6 +109,7 @@ const displayVideos = (videos) => {
                        <span class="text-sm font-mono">${video.others.views}</span>
                     </div>
                 </div>
+                <button onclick="videoDetails('${video.video_id}')" class="btn btn-block">Show Details</button>
             </div>
         `;
     videoContainer.append(createDiv);
@@ -88,4 +118,3 @@ const displayVideos = (videos) => {
 
 // call the function
 categories();
-
